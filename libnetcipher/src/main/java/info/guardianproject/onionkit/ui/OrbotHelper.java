@@ -1,7 +1,6 @@
 
 package info.guardianproject.onionkit.ui;
 
-import info.guardianproject.onionkit.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+
+import info.guardianproject.onionkit.R;
 
 public class OrbotHelper {
 
@@ -23,20 +24,23 @@ public class OrbotHelper {
 
     private Context mContext = null;
 
-    public OrbotHelper(Context context)
-    {
+    public OrbotHelper(Context context) {
         mContext = context;
     }
 
-    public boolean isOrbotRunning()
-    {
-        int procId = TorServiceUtils.findProcessId(TOR_BIN_PATH);
+    public boolean isOrbotRunning() {
+        int procId = -1;
+
+        try {
+            procId = TorServiceUtils.findProcessId(TOR_BIN_PATH);
+        } catch (Exception exception) {
+
+        }
 
         return (procId != -1);
     }
 
-    public boolean isOrbotInstalled()
-    {
+    public boolean isOrbotInstalled() {
         return isAppInstalled(URI_ORBOT);
     }
 
@@ -52,8 +56,7 @@ public class OrbotHelper {
         return installed;
     }
 
-    public void promptToInstall(Activity activity)
-    {
+    public void promptToInstall(Activity activity) {
         String uriMarket = activity.getString(R.string.market_orbot);
         // show dialog - install from market, f-droid or direct APK
         showDownloadDialog(activity, activity.getString(R.string.install_orbot_),
@@ -62,8 +65,8 @@ public class OrbotHelper {
     }
 
     private static AlertDialog showDownloadDialog(final Activity activity,
-            CharSequence stringTitle, CharSequence stringMessage, CharSequence stringButtonYes,
-            CharSequence stringButtonNo, final String uriString) {
+                                                  CharSequence stringTitle, CharSequence stringMessage, CharSequence stringButtonYes,
+                                                  CharSequence stringButtonNo, final String uriString) {
         AlertDialog.Builder downloadDialog = new AlertDialog.Builder(activity);
         downloadDialog.setTitle(stringTitle);
         downloadDialog.setMessage(stringMessage);
@@ -81,8 +84,7 @@ public class OrbotHelper {
         return downloadDialog.show();
     }
 
-    public void requestOrbotStart(final Activity activity)
-    {
+    public void requestOrbotStart(final Activity activity) {
 
         AlertDialog.Builder downloadDialog = new AlertDialog.Builder(activity);
         downloadDialog.setTitle(R.string.start_orbot_);
@@ -103,8 +105,7 @@ public class OrbotHelper {
 
     }
 
-    public void requestHiddenServiceOnPort(Activity activity, int port)
-    {
+    public void requestHiddenServiceOnPort(Activity activity, int port) {
         Intent intent = new Intent(URI_ORBOT);
         intent.setAction(ACTION_REQUEST_HS);
         intent.putExtra("hs_port", port);
